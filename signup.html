@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ShopFlow - Signup</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f4f7f6;">
+    <div class="product-card" style="width: 350px; padding: 2rem; background:white;">
+        <h2 style="text-align: center; color: #2c3e50;">Create Your Shop</h2>
+        <form id="signup-form">
+            <input type="text" id="shopName" placeholder="Business Name" required style="width:100%; margin-bottom:15px; padding:12px; border:1px solid #ddd; border-radius:5px;">
+            <input type="email" id="email" placeholder="Email" required style="width:100%; margin-bottom:15px; padding:12px; border:1px solid #ddd; border-radius:5px;">
+            <input type="password" id="password" placeholder="Password" required style="width:100%; margin-bottom:15px; padding:12px; border:1px solid #ddd; border-radius:5px;">
+            <button class="add-bill-btn" style="width:100%; padding:12px; font-weight:bold;">Launch My POS</button>
+        </form>
+        <p style="text-align: center; margin-top: 15px;">Already have a shop? <a href="login.html">Login</a></p>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await fetch('http://localhost:3000/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    shopName: document.getElementById('shopName').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value
+                })
+            });
+            if (res.ok) {
+                alert("Account created! Redirecting to login...");
+                window.location.href = 'login.html';
+            } else {
+                alert("Signup failed. Email might already be taken.");
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+:root {
+    --primary: #2563eb;
+    --success: #10b981;
+    --danger: #ef4444;
+    --bg: #f8fafc;
+    --border: #e2e8f0;
+}
+
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: #1e293b; }
+.navbar { display: flex; justify-content: space-between; padding: 1rem 5%; background: white; border-bottom: 1px solid var(--border); }
+.logo { font-size: 1.5rem; font-weight: bold; }
+.logo span { color: var(--primary); }
+.nav-links { display: flex; list-style: none; gap: 20px; }
+.container { padding: 2rem 5%; }
+
+/* Stats Bar */
+.stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 2rem; }
+.stat-card { background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.stat-card small { color: #64748b; text-transform: uppercase; font-weight: bold; font-size: 0.7rem; }
+.stat-card h2 { margin: 5px 0 0; color: var(--primary); }
+
+.header { display: flex; justify-content: space-between; margin-bottom: 2rem; }
+.header-actions { display: flex; gap: 15px; }
+.search-input { padding: 10px; border: 1px solid var(--border); border-radius: 8px; width: 250px; }
+
+/* Grid & Cards */
+.main-layout { display: grid; grid-template-columns: 1fr 350px; gap: 30px; align-items: start; }
+.item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+.product-card { background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); }
+.product-card.low-stock-warning { background: #fff1f2; border: 2px solid var(--danger); animation: pulse 2s infinite; }
+.low-stock-label { background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+.product-price { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+
+.card-actions { display: flex; gap: 10px; margin-top: 15px; }
+.add-bill-btn { flex: 1; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
+.delete-btn { background: #fee2e2; border: none; padding: 8px; border-radius: 6px; cursor: pointer; color: var(--danger); }
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0px rgba(239, 68, 68, 0); }
+}
+
+/* Sidebar & Table */
+.cash-out-sidebar { background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); position: sticky; top: 20px; }
+.checkout-btn { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+.history-section { margin-top: 40px; background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+
+/* Modal */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
+.modal { background: white; padding: 2rem; border-radius: 12px; width: 400px; }
+.form-group { margin-bottom: 1rem; }
+.form-group input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; }
+.modal-btns { display: flex; gap: 10px; }
+.save-btn { flex: 2; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; }
+
+.edit-btn {
+    background: #f1f5f9;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--dark);
+    transition: background 0.2s;
+}
+
+.edit-btn:hover {
+    background: #e2e8f0;
+}
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qty-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.qty-btn:hover {
+    background: var(--border);
+}
+
+.bill-item-row {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.text-btn-success {
+    background: none;
+    border: none;
+    color: var(--success);
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.history-actions {
+    display: flex;
+    align-items: center;
+}

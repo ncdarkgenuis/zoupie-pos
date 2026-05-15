@@ -1,15 +1,17 @@
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
-const path = require('path'); // Added for deployment
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (your dashboard.html) from the current directory
+// --- DEPLOYMENT FIX: SERVE ALL YOUR FILES ---
+// This ensures Render can find your /public, /auth, or root HTML files
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
@@ -65,7 +67,7 @@ app.post('/inventory/cashout-bulk', async (req, res) => {
     } catch (e) { res.status(500).send(e.message); }
 });
 
-// 4. INSIGHTS
+// 4. ANALYTICS
 app.get('/analytics/:email', async (req, res) => {
     try {
         const { data: sales } = await supabase.from('sales').select('*').eq('shop_owner_email', req.params.email);
@@ -78,9 +80,16 @@ app.get('/analytics/:email', async (req, res) => {
     } catch (e) { res.status(500).send(e.message); }
 });
 
-// Route to serve dashboard.html as the main page
+// --- DEPLOYMENT FIX: ROUTING ---
+// These ensure that going to /login or /dashboard actually opens the right file
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
+app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, 'signup.html')));
+app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
+
+// Catch-all: If no route matches, send them to login
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 
 const PORT = process.env.PORT || 3000;
