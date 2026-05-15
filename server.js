@@ -8,10 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- DEPLOYMENT FIX: SERVE ALL YOUR FILES ---
-// This ensures Render can find your /public, /auth, or root HTML files
+// Serve static files from the root directory
 app.use(express.static(__dirname));
-app.use(express.static(path.join(__dirname, 'public')));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
@@ -74,20 +72,28 @@ app.get('/analytics/:email', async (req, res) => {
         const rev = sales?.reduce((a, b) => a + Number(b.total_price || 0), 0) || 0;
         const prof = sales?.reduce((a, b) => a + Number(b.net_profit || 0), 0) || 0;
         const counts = {};
-        sales?.forEach(s => counts[s.item_name] = (counts[s.item_name] || 0) + (s.quantity || 0));
+        sales?.forEach(s => {
+            counts[s.item_name] = (counts[s.item_name] || 0) + (s.quantity || 0);
+        });
         const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 5);
         res.json({ revenue: rev.toFixed(2), profit: prof.toFixed(2), topItems: top });
     } catch (e) { res.status(500).send(e.message); }
 });
 
-// --- DEPLOYMENT FIX: ROUTING ---
-// These ensure that going to /login or /dashboard actually opens the right file
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, 'signup.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
+// --- ROUTES FOR HTML PAGES ---
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
 
-// Catch-all: If no route matches, send them to login
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'signup.html'));
+});
+
+// Catch-all route to prevent crashes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
