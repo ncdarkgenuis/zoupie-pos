@@ -8,8 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the root directory
+// SENSITIVE: This helps the server find your HTML files wherever they are
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'auth')));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
@@ -80,23 +82,23 @@ app.get('/analytics/:email', async (req, res) => {
     } catch (e) { res.status(500).send(e.message); }
 });
 
-// --- ROUTES FOR HTML PAGES ---
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login.html'));
-});
+// --- DYNAMIC FILE SERVING ---
+// This function helps find the files without crashing if they are in subfolders
+const sendFileSafely = (res, fileName) => {
+    const paths = [
+        path.join(__dirname, fileName),
+        path.join(__dirname, 'public', fileName),
+        path.join(__dirname, 'public', 'auth', fileName)
+    ];
+    for (const p of paths) {
+        if (require('fs').existsSync(p)) return res.sendFile(p);
+    }
+    res.status(404).send(`${fileName} not found in root, public, or auth folders.`);
+};
 
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
-});
-
-app.get('/signup', (req, res) => {
-    res.sendFile(path.join(__dirname, 'signup.html'));
-});
-
-// Catch-all route to prevent crashes
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login.html'));
-});
+app.get('/', (req, res) => sendFileSafely(res, 'login.html'));
+app.get('/dashboard', (req, res) => sendFileSafely(res, 'dashboard.html'));
+app.get('/signup', (req, res) => sendFileSafely(res, 'signup.html'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
