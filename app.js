@@ -3,7 +3,7 @@ const userId = localStorage.getItem('shopFlowUserId');
 const shopName = localStorage.getItem('shopFlowName');
 
 if (!userId) {
-    window.location.href = 'auth/signup.html';
+    window.location.href = "/signup";
 }
 
 document.querySelector('h1').innerText = `ShopFlow: ${shopName}`;
