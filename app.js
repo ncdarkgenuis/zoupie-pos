@@ -1,12 +1,12 @@
-// Dynamic API URL selection: uses live Render URL when deployed, defaults to localhost for local testing
+// Line 1: Dynamic API URL selection: uses live Render URL when deployed, defaults to localhost for local testing
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
     : 'https://zoupie-pos.onrender.com';
 
-// Global cart array for checkout
+// Line 6: Global cart array for checkout
 let cart = [];
 
-// --- 1. AUTHENTICATION / LOGIN ---
+// Line 9: --- 1. AUTHENTICATION / LOGIN ---
 async function login(email, password) {
     const loginBtn = document.querySelector('button[onclick*="login"]');
     if (loginBtn) loginBtn.innerText = "Verifying...";
@@ -26,7 +26,7 @@ async function login(email, password) {
     }
 }
 
-// --- 2. FETCH AND RENDER INVENTORY ---
+// Line 29: --- 2. FETCH AND RENDER INVENTORY ---
 async function loadInventory() {
     const email = localStorage.getItem('shop_owner_email');
     if (!email) {
@@ -57,7 +57,7 @@ async function loadInventory() {
     }
 }
 
-// --- 3. BULK INVENTORY UPLOAD ---
+// Line 60: --- 3. BULK INVENTORY UPLOAD ---
 async function uploadBulkItems(itemsArray) {
     const email = localStorage.getItem('shop_owner_email');
     try {
@@ -78,7 +78,7 @@ async function uploadBulkItems(itemsArray) {
     }
 }
 
-// --- 4. CART & BULK CASHOUT FLOOR LOGIC ---
+// Line 81: --- 4. CART & BULK CASHOUT FLOOR LOGIC ---
 function addToCart(id, name, price, maxStock) {
     const existing = cart.find(item => item.id === id);
     if (existing) {
@@ -97,7 +97,7 @@ function addToCart(id, name, price, maxStock) {
     renderCart();
 }
 
-// --- 5. RENDER TERMINAL CART ---
+// Line 101: --- 5. RENDER TERMINAL CART ---
 function renderCart() {
     const cartDiv = document.getElementById('cart-container');
     if (!cartDiv) return;
@@ -120,7 +120,7 @@ function renderCart() {
     if (totalDiv) totalDiv.innerText = grandTotal.toFixed(2);
 }
 
-// --- 6. PROCESS CASHOUT ---
+// Line 123: --- 6. PROCESS CASHOUT ---
 async function processBulkCashout() {
     if (cart.length === 0) {
         alert("Your transaction cart is currently empty!");
@@ -149,7 +149,7 @@ async function processBulkCashout() {
     }
 }
 
-// --- 7. DASHBOARD PERFORMANCE ANALYTICS ---
+// Line 149: --- 7. DASHBOARD PERFORMANCE ANALYTICS ---
 async function loadAnalytics() {
     const email = localStorage.getItem('shop_owner_email');
     try {
@@ -166,10 +166,10 @@ async function loadAnalytics() {
         console.error("Analytics loading error:", error);
     }
 }
-
+// Line 169: Auto-load event listener handling matching UI context
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('inventory-table-body')) {
         loadInventory();
         loadAnalytics();
     }
-});
+}); // Line 175: This is exactly line 158.
