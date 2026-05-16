@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopFlow-Pro - Management Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>ShopFlow-Pro Login</h2>
+            <p class="auth-subtitle">Access your shop inventory and floor terminal</p>
+            
+            <div class="form-group">
+                <label for="email">Shop Owner Email</label>
+                <input type="email" id="email" placeholder="enter your registered email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            
+            <button class="btn-primary" onclick="handleLoginClick()">Login</button>
+            
+            <div class="auth-footer">
+                <p>Don't have a shop? <a href="/signup">Create one here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function handleLoginClick() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                alert("Please complete both form entry parameters.");
+                return;
+            }
+            login(email, password);
+        }
+    </script>
+</body>
+</html>
