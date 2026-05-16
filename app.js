@@ -32,7 +32,7 @@ async function init() {
 // LOGOUT FUNCTION
 window.logout = () => {
     localStorage.clear();
-    window.location.href = 'auth/signup.html';
+    window.location.href = "/signup";
 };
 
 // MODIFIED SAVE (Includes userId)
