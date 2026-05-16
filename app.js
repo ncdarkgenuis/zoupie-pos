@@ -12,13 +12,11 @@ async function login(email, password) {
     if (loginBtn) loginBtn.innerText = "Verifying...";
 
     try {
-        // We ping the inventory route to see if the shop profile exists
         const response = await fetch(`${API_URL}/inventory/${email}`);
         if (!response.ok) throw new Error("Server communication issue.");
         
         const products = await response.json();
         
-        // Save session email to localStorage for dashboard use
         localStorage.setItem('shop_owner_email', email);
         window.location.href = '/dashboard';
     } catch (error) {
@@ -99,6 +97,7 @@ function addToCart(id, name, price, maxStock) {
     renderCart();
 }
 
+// --- 5. RENDER TERMINAL CART ---
 function renderCart() {
     const cartDiv = document.getElementById('cart-container');
     if (!cartDiv) return;
@@ -121,6 +120,7 @@ function renderCart() {
     if (totalDiv) totalDiv.innerText = grandTotal.toFixed(2);
 }
 
+// --- 6. PROCESS CASHOUT ---
 async function processBulkCashout() {
     if (cart.length === 0) {
         alert("Your transaction cart is currently empty!");
@@ -140,7 +140,7 @@ async function processBulkCashout() {
             cart = [];
             renderCart();
             loadInventory();
-            loadAnalytics(); // Refresh analytics grid if open
+            loadAnalytics();
         } else {
             alert("Cashout failed to process.");
         }
@@ -149,7 +149,7 @@ async function processBulkCashout() {
     }
 }
 
-// --- 5. DASHBOARD PERFORMANCE ANALYTICS ---
+// --- 7. DASHBOARD PERFORMANCE ANALYTICS ---
 async function loadAnalytics() {
     const email = localStorage.getItem('shop_owner_email');
     try {
@@ -167,11 +167,9 @@ async function loadAnalytics() {
     }
 }
 
-// Auto-load matching UI elements depending on active dashboard context
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('inventory-table-body')) {
         loadInventory();
         loadAnalytics();
     }
 });
-        
