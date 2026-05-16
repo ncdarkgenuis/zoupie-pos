@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Tell the server to look for your HTML/CSS/JS in the root folder
+// Look for files directly lying in the main root directory
 app.use(express.static(__dirname));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
