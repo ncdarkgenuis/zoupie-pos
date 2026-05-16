@@ -2,16 +2,21 @@
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
     : 'https://zoupie-pos.onrender.com';
+
 // Global cart array for checkout
 let cart = [];
+
 // --- 1. AUTHENTICATION / LOGIN ---
 async function login(email, password) {
     const loginBtn = document.querySelector('button[onclick*="login"]');
     if (loginBtn) loginBtn.innerText = "Verifying...";
-      try {
+
+    try {
         const response = await fetch(`${API_URL}/inventory/${email}`);
         if (!response.ok) throw new Error("Server communication issue.");
+        
         const products = await response.json();
+        
         localStorage.setItem('shop_owner_email', email);
         window.location.href = '/dashboard';
     } catch (error) {
@@ -20,6 +25,7 @@ async function login(email, password) {
         if (loginBtn) loginBtn.innerText = "Login";
     }
 }
+
 // --- 2. FETCH AND RENDER INVENTORY ---
 async function loadInventory() {
     const email = localStorage.getItem('shop_owner_email');
@@ -27,11 +33,14 @@ async function loadInventory() {
         window.location.href = '/login';
         return;
     }
+
     try {
         const response = await fetch(`${API_URL}/inventory/${email}`);
         const products = await response.json();
+        
         const tableBody = document.getElementById('inventory-table-body');
-        if (!tableBody) return;  
+        if (!tableBody) return;
+        
         tableBody.innerHTML = '';
         products.forEach(p => {
             const row = document.createElement('tr');
@@ -47,6 +56,7 @@ async function loadInventory() {
         console.error("Error loading inventory:", error);
     }
 }
+
 // --- 3. BULK INVENTORY UPLOAD ---
 async function uploadBulkItems(itemsArray) {
     const email = localStorage.getItem('shop_owner_email');
@@ -56,6 +66,7 @@ async function uploadBulkItems(itemsArray) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, items: itemsArray })
         });
+        
         if (response.ok) {
             alert("Bulk items added successfully!");
             loadInventory();
@@ -66,6 +77,7 @@ async function uploadBulkItems(itemsArray) {
         console.error("Bulk upload error:", error);
     }
 }
+
 // --- 4. CART & BULK CASHOUT FLOOR LOGIC ---
 function addToCart(id, name, price, maxStock) {
     const existing = cart.find(item => item.id === id);
@@ -84,12 +96,15 @@ function addToCart(id, name, price, maxStock) {
     }
     renderCart();
 }
+
 // --- 5. RENDER TERMINAL CART ---
 function renderCart() {
     const cartDiv = document.getElementById('cart-container');
     if (!cartDiv) return;
+    
     cartDiv.innerHTML = '';
     let grandTotal = 0;
+    
     cart.forEach(item => {
         grandTotal += item.price * item.qtySold;
         const div = document.createElement('div');
@@ -100,15 +115,18 @@ function renderCart() {
         `;
         cartDiv.appendChild(div);
     });
+    
     const totalDiv = document.getElementById('cart-grand-total');
     if (totalDiv) totalDiv.innerText = grandTotal.toFixed(2);
 }
+
 // --- 6. PROCESS CASHOUT ---
 async function processBulkCashout() {
     if (cart.length === 0) {
         alert("Your transaction cart is currently empty!");
         return;
     }
+    
     const email = localStorage.getItem('shop_owner_email');
     try {
         const response = await fetch(`${API_URL}/inventory/cashout-bulk`, {
@@ -116,6 +134,7 @@ async function processBulkCashout() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ cart: cart, email: email })
         });
+        
         if (response.ok) {
             alert("Transaction finalized successfully!");
             cart = [];
@@ -129,12 +148,14 @@ async function processBulkCashout() {
         console.error("Cashout system error:", error);
     }
 }
+
 // --- 7. DASHBOARD PERFORMANCE ANALYTICS ---
 async function loadAnalytics() {
     const email = localStorage.getItem('shop_owner_email');
     try {
         const response = await fetch(`${API_URL}/analytics/${email}`);
         const data = await response.json();
+        
         if (document.getElementById('total-revenue')) {
             document.getElementById('total-revenue').innerText = data.revenue;
         }
@@ -145,10 +166,10 @@ async function loadAnalytics() {
         console.error("Analytics loading error:", error);
     }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('inventory-table-body')) {
         loadInventory();
         loadAnalytics();
     }
 });
-                
