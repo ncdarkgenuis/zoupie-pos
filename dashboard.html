@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopFlow-Pro - Dashboard Terminal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="sidebar-brand">
+                    <h2>ShopFlow-Pro</h2>
+                </div>
+                <nav class="sidebar-menu">
+                    <a href="#" class="sidebar-item active" onclick="switchView('floor')">📊 Terminal Floor</a>
+                    <a href="#" class="sidebar-item" onclick="switchView('stock-mgmt')">🔄 Restock Inventory</a>
+                    <a href="#" class="sidebar-item" onclick="switchView('history')">📜 Sales History</a>
+                </nav>
+            </div>
+            <button onclick="localStorage.clear(); window.location.href='/'" class="sidebar-logout">Logout</button>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Workspace Control Control</h1>
+                <div id="user-display" style="font-weight: 600; color: var(--text-muted);">Terminal Active</div>
+            </header>
+
+            <div id="floor-view" class="view-panel">
+                <div class="metrics-grid">
+                    <div class="card">
+                        <h3>Total Revenue</h3>
+                        <p>₵<span id="total-revenue">0.00</span></p>
+                    </div>
+                    <div class="card">
+                        <h3>Net Performance Profit</h3>
+                        <p>₵<span id="net-profit">0.00</span></p>
+                    </div>
+                </div>
+
+                <div class="floor-layout">
+                    <section class="inventory-section">
+                        <h2>Active Stock Inventory</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-table-body"></tbody>
+                        </table>
+                    </section>
+
+                    <section class="checkout-section">
+                        <h2>Terminal POS Cart</h2>
+                        <div id="cart-container"></div>
+                        <h3>
+                            <span>Grand Total:</span>
+                            <span>₵<span id="cart-grand-total">0.00</span></span>
+                        </h3>
+                        <button class="btn-primary" onclick="processBulkCashout()">Finalize Bulk Cashout</button>
+                    </section>
+                </div>
+            </div>
+
+            <div id="stock-mgmt-view" class="view-panel" style="display:none;">
+                <div class="inventory-section" style="max-width: 600px; margin: 0 auto;">
+                    <h2>Restock & Inventory Intake Pipeline</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">
+                        Replenish existing stock parameters or map down brand new catalog arrivals instantly.
+                    </p>
+                    
+                    <div class="restock-mode-container" style="display: flex; gap: 20px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+                        <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                            <input type="radio" name="restock-mode" value="existing" checked onchange="toggleRestockMode('existing')"> 
+                            Update Existing Item Quantity
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+                            <input type="radio" name="restock-mode" value="new" onchange="toggleRestockMode('new')"> 
+                            + Add Entirely New Item
+                        </label>
+                    </div>
+                    
+                    <div id="group-existing-item" class="form-group">
+                        <label for="stock-item-select">Select Product Base Line</label>
+                        <select id="stock-item-select" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border-color); background:#fff; font-size:14px;"></select>
+                    </div>
+
+                    <div id="group-new-item" class="form-group" style="display: none;">
+                        <label for="stock-new-name">New Item Identifier Name</label>
+                        <input type="text" id="stock-new-name" placeholder="e.g. Premium Loaf Bread">
+                    </div>
+
+                    <div id="group-pricing-fields" class="grid-two-columns" style="display: none; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="stock-cost-price">Cost Price (₵)</label>
+                            <input type="number" id="stock-cost-price" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="stock-sale-price">Retail Retail Price (₵)</label>
+                            <input type="number" id="stock-sale-price" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stock-qty-input">Quantity to Add</label>
+                        <input type="number" id="stock-qty-input" placeholder="e.g. 100" min="1">
+                    </div>
+                    
+                    <button class="btn-primary" style="margin-top: 10px;" onclick="submitStockAdjustment()">Save Inventory Entry</button>
+                </div>
+            </div>
+
+            <div id="history-view" class="view-panel" style="display:none;">
+                <div class="inventory-section">
+                    <h2>Terminal Shift Sales Log</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Audit journal of product transaction velocities completed during this current performance cycle.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item Descriptor</th>
+                                <th>Total Quantity Sold</th>
+                                <th>Fulfillment Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
