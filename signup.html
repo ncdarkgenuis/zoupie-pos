@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopFlow-Pro - Register Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Register Your Shop</h2>
+            <p class="auth-subtitle">Set up your automated retail workspace</p>
+            
+            <div class="form-group">
+                <label for="shop-name">Shop Name</label>
+                <input type="text" id="shop-name" placeholder="e.g., Zoupie Boutiques" required>
+            </div>
+
+            <div class="form-group">
+                <label for="signup-email">Owner Email</label>
+                <input type="email" id="signup-email" placeholder="your account contact email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" placeholder="••••••••" required>
+            </div>
+            
+            <button class="btn-primary" onclick="handleSignup()">Register Workspace</button>
+            
+            <div class="auth-footer">
+                <p>Already have a registered account? <a href="/">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleSignup() {
+            const email = document.getElementById('signup-email').value.trim();
+            if(!email) { alert("Please input a valid email registration entry."); return; }
+            localStorage.setItem('shop_owner_email', email);
+            alert("Shop configuration space recorded locally! Directing to retail interface...");
+            window.location.href = '/dashboard';
+        }
+    </script>
+</body>
+</html>
