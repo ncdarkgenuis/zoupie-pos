@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopFlow-Pro | Authenticate</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Welcome Back</h1>
+        <p class="login-subtitle">Log into your custom terminal channel</p>
+        
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Registered Email Address</label>
+                <input type="email" id="login-email" placeholder="owner@shop.com" required>
+            </div>
+            <div class="form-group">
+                <label>Security Password</label>
+                <input type="password" id="login-password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary">Open Workstation</button>
+        </form>
+        <p style="margin-top: 20px; font-size: 13px; color: var(--text-muted);">
+            New shop manager? <a href="signup.html" style="color: var(--accent); text-decoration: none; font-weight: 600;">Register account</a>
+        </p>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            if (email) {
+                localStorage.setItem('shop_owner_email', email);
+                window.location.href = '/dashboard';
+            }
+        }
+    </script>
+</body>
+</html>
