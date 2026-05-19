@@ -8,7 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static frontend files cleanly from the root directory
 app.use(express.static(path.join(__dirname)));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
